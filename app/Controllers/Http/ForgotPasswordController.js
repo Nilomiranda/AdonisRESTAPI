@@ -2,6 +2,7 @@
 
 const crypto = require('crypto')
 const User = use('App/Models/User')
+const Mail = use('Mail')
 
 class ForgotPasswordController {
   async store ({ request, response }) {
@@ -17,6 +18,13 @@ class ForgotPasswordController {
       user.token_created_at = new Date() // date of when token was created
 
       await user.save()
+
+      await Mail.send('emails.forgotpass',
+        { email, link: `https://google.com/token=${user.token}` },
+        (message) => {
+          message.from('me@danmiranda.io')
+          message.to(email)
+        })
     } catch (err) {
       return response
         .status(err.status)
