@@ -9,6 +9,7 @@ Route.post('users', 'UserController.store')
 Route.get('sessions', 'SessionController.store')
 
 // recovering password
-Route.post('passwords', 'ForgotPasswordController.store')
+Route.post('passwords', 'ForgotPasswordController.store') // request
+Route.put('passwords', 'ForgotPasswordController.update')
 
 module.exports = Route
