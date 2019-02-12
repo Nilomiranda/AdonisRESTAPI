@@ -17,8 +17,15 @@ class ForgotPasswordController {
       user.token = crypto.randomBytes(10).toString('hex') // random token
       user.token_created_at = new Date() // date of when token was created
 
-      await user.save()
+      await user.save() // saves token to the user
 
+      // script to send email
+      /**
+       * .send() method requires a few parameters
+       * @param {string} email template Address of template to serve the email inside resources/views
+       * @param {Object} variables to be sent to the template
+       * @param {Function} message set parameters like sender and receiver
+       */
       await Mail.send('emails.forgotpass',
         { email, link: `https://google.com/token=${user.token}` },
         (message) => {
