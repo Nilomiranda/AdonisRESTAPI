@@ -51,6 +51,8 @@ class ProjectController {
 
     project.merge(data)
 
+    await project.save()
+
     return project
   }
 
@@ -61,7 +63,7 @@ class ProjectController {
   async destroy ({ params, response }) {
     const project = await Project.findOrFail(params.id)
 
-    project.delete()
+    await project.delete()
 
     return response.status(200).send({ success: { message: 'Project deleted' } })
   }

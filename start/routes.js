@@ -22,7 +22,10 @@ Route.group(() => {
   Route.get('files/:id', 'FileController.show') // downloading file
 
   // Project CRUD
-  Route.resource('projects', 'ProjectController')
+  Route.resource('projects', 'ProjectController').apiOnly()
+
+  // Task CRUD
+  Route.resource('projects.tasks', 'TaskController').apiOnly()
 }).middleware(['auth'])
 
 module.exports = Route
