@@ -99,6 +99,9 @@ Send a `GET` request to `/sessions`, with the following:
 }
 ```
 
+When you signin you'll receive a `Bearer token`. You'll need this token to send
+any request related to Project and Task creation.
+
 ### Recovering the password
 
 If, by any reason, you forgot the password, you won't be able to directly access
@@ -109,10 +112,104 @@ First, request a password recovery by sending a `POST` request to `/passwords` w
 
 ```json
 {
-  "email": "email@here.com
+  "email": "email@here.com"
 }
 ```
 
+After that, you'll receive an email with a link. Grab the `token` that is after
+`paswords/`.
 
+Having that token, to finally update the password, send a `PUT` request to
+`passwords/TOKEN_HERE` with the following JSON body:
+
+```json
+  {
+    "password": "123",
+	  "password_confirmation": "123"
+  }
+```
+
+> Frow now on, every request described here will require you to send 
+> the Bearer token
+
+### Creating a new project
+
+Send a `POST` request to `/projects`, with the following:
+
+```json
+{
+	"title": "Second React Project",
+	"description": "Second react project comment"
+}
+```
+
+### Listing all projects
+
+If you want to see the list of all projects, send a `GET` request to 
+`/projects`.
+
+There's pagination feature implemented, and if you want to filter the posts
+by page, send a patameter within the request url: `/projects?page=PAGE_NUMBER_HERE`.
+
+There's no need for a JSON body in this request.
+
+### Showing only a specific project
+
+You can list only one project by sending a `GET` request to `projects/PROJECT_ID_HERE`.
+
+No need for a body as well.
+
+### Updating project
+
+You can also update a project with a `PUT` request and the body:
+
+```json
+{
+	"title": "First React Project, edited",
+	"description": "First react project fucking edited comment"
+}
+```
+
+### Deleting a project
+
+Simply delete a project by informing its ID in the `DELETE` request URL
+`projects/PROJECT_ID`.
+
+### Creating tasks for a project
+
+`POST` request to `projects/PROJECT_ID/tasks, with the following:
+
+```json
+{
+	"title": "First task #300",
+	"description": "This is the first task",
+	"due_date": "2019-02-22 19:00:00",
+	"user_id": "2",
+	"file_id": "4"
+}
+```
+
+### Listing all task
+
+Just as we did to list all projects, send `GET` request to `/projects/PROJECT_ID/tasks`.
+Pagination **isn't** implemented for listing tasks
+
+### Showing a specific tasks
+
+Send a `GET` request for `/projects/PROJECT_ID/tasks/TASK_ID`
+
+### Updating a task
+
+Send a `PUT` request `/projects/PROJECT_ID/tasks/TASK_ID` with the body:
+
+```json
+{
+	"title": "First task #1, edited title",
+	"description": "This is the first task",
+	"due_date": "2019-02-22 19:00:00",
+	"user_id": "2",
+	"file_id": "4"
+}
+```
 
 

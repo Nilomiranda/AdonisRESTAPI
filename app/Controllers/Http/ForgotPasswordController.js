@@ -27,26 +27,28 @@ class ForgotPasswordController {
        * @param {Object} variables to be sent to the template
        * @param {Function} message set parameters like sender and receiver
        */
-      await Mail.send('emails.forgotpass',
-        { email, link: `https://google.com/token=${user.token}` },
-        (message) => {
+      await Mail.send(
+        'emails.forgotpass',
+        { email, link: `https://127.0.0.1:3333/passwords/${user.token}` },
+        message => {
           message.from('me@danmiranda.io')
           message.to(email)
-        })
+        }
+      )
     } catch (err) {
-      return response
-        .status(err.status)
-        .send(
-          { error:
-            { message: 'Something went wrong. This email does not seem to be from a valid user' }
-          }
-        )
+      return response.status(err.status).send({
+        error: {
+          message:
+            'Something went wrong. This email does not seem to be from a valid user'
+        }
+      })
     }
   }
 
-  async update ({ request, response }) {
+  async update ({ request, response, params }) {
     try {
-      const { password, token } = request.all() // recovering email from request
+      const { password } = request.all() // recovering email from request
+      const { token } = params
 
       const user = await User.findByOrFail('token', token) // looking for user that matches the token provided
 
@@ -65,11 +67,12 @@ class ForgotPasswordController {
 
       // if token is expired returns an error
       if (tokenExpired) {
-        return response
-          .status(401)
-          .send({ error:
-            { message: 'Your token is expired, please request a new password reset' }
-          })
+        return response.status(401).send({
+          error: {
+            message:
+              'Your token is expired, please request a new password reset'
+          }
+        })
       }
 
       // if token is valid then proceeds
@@ -79,13 +82,11 @@ class ForgotPasswordController {
 
       await user.save()
     } catch (err) {
-      return response
-        .status(err.status)
-        .send(
-          { error:
-            { message: 'Something went wrong. This token seems invalid for you' }
-          }
-        )
+      return response.status(err.status).send({
+        error: {
+          message: 'Something went wrong. This token seems invalid for you'
+        }
+      })
     }
   }
 }

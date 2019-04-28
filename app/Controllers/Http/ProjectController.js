@@ -25,7 +25,7 @@ class ProjectController {
     const userId = auth.user.id // retrieving user id currently logged
     const data = request.only(['title', 'description'])
 
-    const project = Project.create({ ...data, user_id: userId })
+    const project = await Project.create({ ...data, user_id: userId })
 
     return project
   }
@@ -67,7 +67,9 @@ class ProjectController {
 
     await project.delete()
 
-    return response.status(200).send({ success: { message: 'Project deleted' } })
+    return response
+      .status(200)
+      .send({ success: { message: 'Project deleted' } })
   }
 }
 
